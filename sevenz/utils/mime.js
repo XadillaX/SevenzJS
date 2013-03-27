@@ -1,10 +1,19 @@
-/**
- * Created with JetBrains WebStorm.
- * User: xadillax
- * Date: 13-3-26
- * Time: 下午8:17
- * To change this template use File | Settings | File Templates.
- */
+//========================================================
+//         ______________________________________
+// ________|                                      |_______
+// \       | SevenzJS :                           |      /
+//  \      |   A light weighted Node.JS framework |     /
+//  /      |______________________________________|     \
+// /__________)                                (_________\
+//
+// @author  : xadillax
+//
+// @file    : mime.js
+// @create  : 13-3-26 下午8:17
+//
+// @brief   :
+//   各种MIME信息
+//========================================================
 exports.types = {
     "css": "text/css",
     "gif": "image/gif",

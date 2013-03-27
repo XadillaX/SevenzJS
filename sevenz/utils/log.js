@@ -1,3 +1,7 @@
+/**
+ * @refer http://cnodejs.org/topic/4f16442ccae1f4aa27001125
+ * @type {*}
+ */
 var fs = require('fs');
 
 var cwd = process.cwd() + '/',

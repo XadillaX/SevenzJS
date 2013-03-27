@@ -1,12 +1,26 @@
-/**
- * Created with JetBrains WebStorm.
- * User: xadillax
- * Date: 13-3-26
- * Time: 下午3:48
- * 路由相关
- */
+//========================================================
+//         ______________________________________
+// ________|                                      |_______
+// \       | SevenzJS :                           |      /
+//  \      |   A light weighted Node.JS framework |     /
+//  /      |______________________________________|     \
+// /__________)                                (_________\
+//
+// @author  : xadillax
+//
+// @file    : sRouter.js
+// @create  : 13-3-26 下午3:48
+//
+// @brief   :
+//   路由相关模块
+//========================================================
 require("./utils/json2");
 
+/**
+ * @brief 判断是否是合法的类名
+ * @param str
+ * @returns {boolean} 是否合法
+ */
 exports.isValidClassString = function(str) {
     for(var i = 0; i < str.length; i++)
     {
@@ -20,25 +34,38 @@ exports.isValidClassString = function(str) {
 
     return true;
 }
+
+/**
+ * @brief logger实例
+ */
 exports.logger = null;
+
+/**
+ * @brief 配置信息}
+ */
 exports.conf = null;
+
+/**
+ * 文件系统模块
+ */
 exports.fs = require("fs");
 
 /**
- * 路由处理函数
- * @param cls       Action信息
- * @param func      Action函数
- * @param request   request信息
- * @param response  response信息
- * @param pathinfo  URI信息
+ * @brief 路由处理函数
+ * @param cls
+ * @param func
+ * @param request
+ * @param response
+ * @param pathinfo
+ * @param postData
  * @private
  */
-exports._view = function(cls, func, request, response, pathinfo) {
+exports._view = function(cls, func, request, response, pathinfo, postData) {
     this.logger.info("Routing to '" + cls + "' - '" + func + "'...");
 
     /** 实例化action对象 */
     var rAction = require("./sAction");
-    var action = new rAction.sAction(request, response, pathinfo, this.conf);
+    var action = new rAction.sAction(request, response, pathinfo, this.conf, this.logger, postData);
 
     /** 判断Action合法性 */
     if(this.isValidClassString(cls))
@@ -101,16 +128,42 @@ exports._view = function(cls, func, request, response, pathinfo) {
 }
 
 /**
- * 路由入口函数
- * @param pathinfo URI数组信息
- * @param request request信息
- * @param response response信息
+ * @brief 路由入口函数
+ * @param pathinfo  URI数组信息
+ * @param request   request信息
+ * @param response  response信息
  */
-exports.route = function(pathinfo, request, response) {
+exports.route = function(pathinfo, postData, request, response) {
+    /** 去除后缀 */
+    if(pathinfo.length > 0)
+    {
+        var lastParam = pathinfo[pathinfo.length - 1];
+        var suffCount = this.conf["server"]["suffix"].length;
+        var suffs = this.conf["server"]["suffix"];
+
+        for(var i = 0; i < suffCount; i++)
+        {
+            /**
+             * substr: start, length
+             */
+            if(lastParam.substr(lastParam.length - suffs[i].length, suffs[i].length).toLowerCase() == suffs[i].toLowerCase())
+            {
+                /**
+                 * substring: start, end
+                 * @type {string}
+                 */
+                lastParam = lastParam.substring(0, lastParam.length - suffs[i].length);
+                pathinfo[pathinfo.length - 1] = lastParam;
+                break;
+            }
+        }
+    }
+
+    /** 解析Action以及其func */
     var act = pathinfo[0];
     var func = pathinfo[1];
     if(act === undefined || act === "") act = "index";
     if(func === undefined || func === "") func = "index";
 
-    this._view(act.toLowerCase(), func.toLowerCase(), request, response, pathinfo);
+    this._view(act.toLowerCase(), func.toLowerCase(), request, response, pathinfo, postData);
 }

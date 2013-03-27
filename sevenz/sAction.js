@@ -1,25 +1,58 @@
-/**
- * Created with JetBrains WebStorm.
- * User: xadillax
- * Date: 13-3-26
- * Time: 下午1:49
- * 控制器相关函数
- */
+//========================================================
+//         ______________________________________
+// ________|                                      |_______
+// \       | SevenzJS :                           |      /
+//  \      |   A light weighted Node.JS framework |     /
+//  /      |______________________________________|     \
+// /__________)                                (_________\
+//
+// @author  : xadillax
+//
+// @file    : sAction.js
+// @create  : 13-3-26 下午1:49
+//
+// @brief   :
+//   Action模块，其实就是控制器模块的一些经常需要调用的函数和变量
+//========================================================
 var http = require("http");
+var querystring = require("querystring");
+var url = require("url");
 
-exports.sAction = function(request, response, pathinfo, conf) {
+/**
+ * 生成action helper对象
+ * @param request
+ * @param response
+ * @param pathinfo
+ * @param conf
+ * @param logger
+ * @param postData
+ */
+exports.sAction = function(request, response, pathinfo, conf, logger, postData) {
     this.status = 200;                  ///< 状态码
     this.contentType = "text/html";     ///< 文档类型
     this.head = { };                    ///< 头信息
     this.response = response;           ///< response实例
-    this.request = request;
+    this.request = request;             ///< request实例
     this.content = "";                  ///< 输出内容
-    this.pathinfo = pathinfo;
-    this.conf = conf;
+    this.pathinfo = pathinfo;           ///< pathinfo数组
+    this.conf = conf;                   ///< 配置信息
+    this.logger = logger;               ///< Logger
+    this.GET = querystring.parse(url.parse(request.url).query); ///< GET信息
+    this.POST = querystring.parse(postData);                    ///< POST信息
+
+    var serverInfoTemp = require("./sRequest");
+    this.serverInfo = new serverInfoTemp.sRequest(this.request);
+
+    this.mongodb = null;
+    if(conf["mongodb"] !== undefined)
+    {
+        this.mongodb = require("./sMongoDBHelper");
+        this.mongodb.setConnect(this.conf["mongodb"]);
+    }
 }
 
 /**
- * 设置状态码
+ * @brief 设置状态码
  * @param status
  */
 exports.sAction.prototype.setStatus = function(status) {
@@ -27,13 +60,13 @@ exports.sAction.prototype.setStatus = function(status) {
 };
 
 /**
- * 获取状态码
+ * @brief 获取状态码
  * @returns {number}
  */
 exports.sAction.prototype.getStatus = function() { return this.status; };
 
 /**
- * 设置文档类型
+ * @brief 设置文档类型
  * @param type
  */
 exports.sAction.prototype.setContentType = function(type) {
@@ -41,13 +74,13 @@ exports.sAction.prototype.setContentType = function(type) {
 };
 
 /**
- * 返回状态类型
+ * @brief 返回状态类型
  * @returns {string}
  */
 exports.sAction.prototype.getContentType = function() { return this.contentType; };
 
 /**
- * 设置头
+ * @brief 设置头
  * @param heads
  */
 exports.sAction.prototype.setHeads = function(heads) {
@@ -55,19 +88,22 @@ exports.sAction.prototype.setHeads = function(heads) {
 };
 
 /**
- * 返回头
+ * @brief 返回头
  * @returns {*}
  */
 exports.sAction.prototype.getHeads = function() { return this.head; };
 
 /**
- * 追加输出
+ * @brief 追加输出
  * @param content
  */
 exports.sAction.prototype.write = function(content) {
     this.content += content;
 };
 
+/**
+ * 清空缓冲区
+ */
 exports.sAction.prototype.cleanContent = function() {
     this.content = "";
 };
@@ -85,6 +121,26 @@ exports.sAction.prototype._render = function() {
     this.response.end();
 };
 
+/**
+ * @brief 是否是POST页面
+ * @returns {boolean}
+ */
+exports.sAction.prototype.isPost = function() {
+    return this.sAction.request.method === "POST";
+}
+
+/**
+ * @brief 是否是GET页面
+ * @returns {boolean}
+ */
+exports.sAction.prototype.isGet = function() {
+    return this.sAction.request.method === "GET";
+}
+
+/**
+ * 设置404页面
+ * @param content
+ */
 exports.sAction.prototype.set404 = function(content) {
     this.setStatus(404);
     this.cleanContent();

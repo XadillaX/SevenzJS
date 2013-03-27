@@ -10,7 +10,10 @@ var settings = {
     "server"    : {
         "port"      : 5555,
         "adminemail": "admin@xcoder.in",
-        "statics"   : "/home/xadillax/node.js/sevenz-4sbackend/statics/"
+        "statics"   : "/home/xadillax/node.js/szjs/statics/",
+        "suffix"    : [
+            ".html", ".xhtml", ".do", ".szjs"
+        ]
     },
 
     /** MySQL信息 */
@@ -25,7 +28,7 @@ var settings = {
 
     /** MongoDB信息 */
     "mongodb"   : {
-        "addr"      : "127.0.0.1",
+        "addr"      : "localhost",
         "port"      : 27017,
         "database"  : "7zcar",
         "prefix"    : "7z_"
