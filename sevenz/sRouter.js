@@ -116,8 +116,12 @@ exports._view = function(cls, func, request, response, pathinfo, postData) {
         }
 
         /** 执行函数 */
-        routeTable[func]();
-        action._render();
+        var Fiber = require('fibers');
+
+        Fiber(function(){
+            routeTable[func]();
+            action._render();
+        }).run();
     }
     else
     {

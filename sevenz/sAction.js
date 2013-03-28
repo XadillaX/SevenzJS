@@ -43,11 +43,40 @@ exports.sAction = function(request, response, pathinfo, conf, logger, postData) 
     var serverInfoTemp = require("./sRequest");
     this.serverInfo = new serverInfoTemp.sRequest(this.request);
 
+    /** Mongodb相关初始化 */
     this.mongodb = null;
     if(conf["mongodb"] !== undefined)
     {
-        this.mongodb = require("./sMongoDBHelper");
-        this.mongodb.setConnect(this.conf["mongodb"]);
+        /**
+         * 创建MongoDB
+         * @type {*}
+         */
+        this.mongodb = require("./sMongoSync");
+
+        /**
+         * 创建服务器对象
+         */
+        if(undefined !== conf["mongodb"]["addr"] && undefined !== conf["mongodb"]["port"])
+        {
+            var serv = this.mongodb.getServer(conf["mongodb"]["addr"], conf["mongodb"]["port"]);
+            this.mongodb.defServer = serv;
+        }
+
+        /**
+         * 设置默认数据库
+         */
+        if(undefined !== conf["mongodb"]["database"])
+        {
+            this.mongodb.defDbname = conf["mongodb"]["database"];
+        }
+
+        /**
+         * 设置表前缀
+         */
+        if(undefined !== conf["mongodb"]["prefix"])
+        {
+            this.mongodb.prefix = conf["mongodb"]["prefix"];
+        }
     }
 }
 

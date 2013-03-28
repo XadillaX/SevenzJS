@@ -16,47 +16,22 @@
 //========================================================
 exports.action = function(action) {
     var self = { };
-    var sAction = action;
+    var helper = action;
 
     self["index"] = function() {
-        sAction.write("Hello world!");
-        sAction.write("<hr />")
-        sAction.write("服务端：" + sAction.serverInfo.serverAddr + ":" + sAction.serverInfo.serverPort);
-        sAction.write("<br />")
-        sAction.write("客户端：" + sAction.serverInfo.clientAddr + ":" + sAction.serverInfo.clientPort);
+        var client = helper.mongodb.connect();
+        var collection = helper.mongodb.getCollection(client, "admin");
 
-        var outItem = "aaa";
-        sAction.mongodb.connect(function(err, db){
-            if(err)
-            {
-                sAction.mongodb.close();
-                sAction.set404(err);
-                return;
-            }
+        /** 更新 */
+        var result = helper.mongodb.update(
+            collection,
+            { "adminname" : "XadillaX" },
+            { $set : { "adminname" : "XadillaX1" } },
+            { w : 1 }
+        );
+        helper.write(result);
 
-            db.collection("7z_admin", function(err, collection){
-                if(err)
-                {
-                    sAction.mongodb.close();
-                    sAction.set404(err);
-                    return;
-                }
-
-                collection.findOne({ "adminname" : "XadillaX" }, function(err, item){
-                    if(err)
-                    {
-                        sAction.mongodb.close();
-                        sAction.set404(err);
-                        return;
-                    }
-
-                    outItem = item;
-                    console.log(outItem);
-                });
-            });
-
-            /** TODO: Mongodb一团糟——要是是同步就好了。 */
-        });
+        client.close();
     }
 
     return self;
