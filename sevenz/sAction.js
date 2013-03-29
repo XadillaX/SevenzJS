@@ -43,6 +43,21 @@ exports.sAction = function(request, response, pathinfo, conf, logger, postData) 
     var serverInfoTemp = require("./sRequest");
     this.serverInfo = new serverInfoTemp.sRequest(this.request);
 
+    this.mysql = null;
+    if(conf["mysql"] !== undefined)
+    {
+        mysqlCls = require("./sMysql");
+        this.mysql = new mysqlCls();
+
+        if(conf["mysql"]["addr"] !== undefined) this.mysql.addr = conf["mysql"]["addr"];
+        if(conf["mysql"]["port"] !== undefined) this.mysql.port = conf["mysql"]["port"];
+        if(conf["mysql"]["database"] !== undefined) this.mysql.dbname = conf["mysql"]["database"];
+        if(conf["mysql"]["username"] !== undefined) this.mysql.username = conf["mysql"]["username"];
+        if(conf["mysql"]["password"] !== undefined) this.mysql.password = conf["mysql"]["password"];
+        if(conf["mysql"]["prefix"] !== undefined) this.mysql.prefix = conf["mysql"]["prefix"];
+        if(conf["mysql"]["charset"] !== undefined) this.mysql.charset = conf["mysql"]["charset"];
+    }
+
     /** Mongodb相关初始化 */
     this.mongodb = null;
     if(conf["mongodb"] !== undefined)

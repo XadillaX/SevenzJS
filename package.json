@@ -1,0 +1,27 @@
+{
+  "name": "SevenzJS",
+  "version": "0.0.2",
+  "description": "A light weighted Node.js Framework.",
+  "main": "index.js",
+  "dependencies": {
+    "fibers": "~1.0.0",
+    "mongodb": "~1.2.14",
+    "mysql-libmysqlclient": "~1.5.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XadillaX/SevenzJS"
+  },
+  "keywords": [
+    "Framework",
+    "MongoDB"
+  ],
+  "author": "XadillaX",
+  "license": "Apache License 2.0",
+  "readmeFilename": "README.md",
+  "gitHead": "a0a0476000c492dd8e70c062cfa432f559edbd16"
+}

@@ -19,19 +19,16 @@ exports.action = function(action) {
     var helper = action;
 
     self["index"] = function() {
-        var client = helper.mongodb.connect();
-        var collection = helper.mongodb.getCollection(client, "admin");
+        if(!helper.mysql.connect()) return;
 
-        /** 更新 */
-        var result = helper.mongodb.update(
-            collection,
-            { "adminname" : "XadillaX" },
-            { $set : { "adminname" : "XadillaX1" } },
-            { w : 1 }
-        );
-        helper.write(result);
-
-        client.close();
+        helper.write("<pre>");
+        var tables = helper.mysql.query("SHOW TABLES;");
+        for(var i = 0; i < tables.length; i++)
+        {
+            helper.write(JSON.stringify(tables[i]));
+            helper.write("\n");
+        }
+        helper.write("</pre>");
     }
 
     return self;
