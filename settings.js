@@ -22,8 +22,8 @@ var settings = {
         "port"      : 3306,
         "database"  : "7zcar",
         "username"  : "root",
-        "password"  : "deathmoon",
-        "prefix"    : "7z_"
+        "password"  : "password"
+        //"prefix"    : "7z_"
     },
 
     /** MongoDB信息 */

@@ -105,14 +105,29 @@ exports._view = function(cls, func, request, response, pathinfo, postData) {
             return;
         }
 
+        /** Empty */
+        if(func.toLowerCase() === "_empty")
+        {
+            action.set404();
+        }
+
         /** 操作名错误 */
         if(routeTable[func] === undefined || typeof routeTable[func] !== "function")
         {
-            this.logger.error("No suct action function '" + func + "' @ '" + cls + "'.");
+            /** 但是如果有empty的话 */
+            if(routeTable["_empty"] !== undefined && typeof routeTable["_empty"] === "function")
+            {
+                func = "_empty";
+            }
+            /** 连empty都没的话 */
+            else
+            {
+                this.logger.error("No suct action function '" + func + "' @ '" + cls + "'.");
 
-            if(this.conf["server"]["debug"] === true) action.set404("No suct action function '" + func + "' @ '" + cls + "'.");
-            else action.set404();
-            return;
+                if(this.conf["server"]["debug"] === true) action.set404("No suct action function '" + func + "' @ '" + cls + "'.");
+                else action.set404();
+                return;
+            }
         }
 
         /** 执行函数 */

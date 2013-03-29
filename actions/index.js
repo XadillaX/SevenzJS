@@ -18,7 +18,24 @@ exports.action = function(action) {
     var self = { };
     var helper = action;
 
+    /**
+     * empty路由
+     */
+    self["_empty"] = function() {
+        helper.write("你访问了未定义的路由：" + helper.pathinfo[1]);
+    }
+
+    /**
+     * demo首页
+     */
     self["index"] = function() {
+        helper.write("Hello SevenzJS!");
+    }
+
+    /**
+     * 查看tables
+     */
+    self["showtables"] = function() {
         if(!helper.mysql.connect()) return;
 
         helper.write("<pre>");
