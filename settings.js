@@ -22,8 +22,7 @@ var settings = {
         "port"      : 3306,
         "database"  : "7zcar",
         "username"  : "root",
-        "password"  : "password"
-        //"prefix"    : "7z_"
+        "password"  : "deathmoon"
     },
 
     /** MongoDB信息 */
@@ -35,4 +34,4 @@ var settings = {
     }
 };
 
-exports.settings = settings;''
+exports.settings = settings;

@@ -21,6 +21,7 @@ var mongodb = require("mongodb");
 exports.defServer = null;
 exports.defDbname = "";
 exports.prefix = "";
+exports.defClient = "";         // add by kalxd => 數據庫實例
 
 /**
  * @brief 创建一个服务器连接
@@ -52,6 +53,7 @@ exports.getCollection = function(client, table) {
 exports._connect = function(server, dbname, callback) {
     var client = new mongodb.Db(dbname, server);
 
+    defClient = client;
     client.open(callback);
 }
 
@@ -75,6 +77,14 @@ exports.connect = function(server, dbname) {
     var connWrapper = Future.wrap(this._connect);
 
     return connWrapper(server, dbname).wait();
+}
+
+/**
+ * @brief 斷開、關閉
+ * @author kalxd
+ */
+exports.close = function(){
+    defClient.close();
 }
 
 /**
