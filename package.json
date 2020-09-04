@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "fibers": "~1.0.0",
-    "mongodb": "~1.2.14",
+    "mongodb": "~3.6.1",
     "mysql-libmysqlclient": "~1.5.2"
   },
   "devDependencies": {},
